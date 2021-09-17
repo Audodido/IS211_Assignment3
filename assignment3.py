@@ -1,4 +1,5 @@
 #The url: http://s3.amazonaws.com/cuny-is211-spring2015/weblog.cs
+#path to file, datetime accessed, browser, status of request, request size in bytes
 import argparse
 import csv
 import datetime
@@ -7,28 +8,25 @@ import sys
 from urllib.request import urlopen
 
 def downloadData(url): 
-    """Downloads data and writes it to a locally-stored .csv"""
+    """Pulls down web log file """
 
-    response = urlopen(url)#.read()
-    with open('weblog.csv', 'w') as new_file: #creates a file called weblog if there isn't one already in my directory
-        new_file.write(response.read().decode('utf-8'))
-    
+    response = urlopen(url)
+    lines = [l.decode('utf-8') for l in response.readlines()] #decoding and putting lines from file into a list
+    data = csv.reader(lines) 
+    for row in data: 
+        print(row)
 
 def processData():
     """reads from my locally stored weblog.csv"""
 
-    with open('weblog.csv', 'r') as csvFile:
-        reader = csv.reader(csvFile)
-        data = [r for r in reader]
-        for d in data:
-            print(d) # changing this to 'return' later -- printing now just to see what's in 'data' variable
-            print(type(data))
+    pass
+
 
 def main(url):
     print(f"Running main with URL = {url}...")
 
     downloadData(url)
-    processData()
+    # processData(downloadData(url))
 
 
 if __name__ == "__main__":
