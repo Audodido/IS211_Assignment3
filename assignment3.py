@@ -39,40 +39,37 @@ def browser_checker(lines):
     
     data = csv.reader(lines)
 
-    chrome_index = 0
-    firefox_index = 0
-    ie_index = 0
-    safari_index = 0
+    browser_dict = {
+        "Chrome": 0,
+        "Firefox": 0,
+        "Internet Explorer": 0,
+        "Safari": 0
+        }
 
     for row in data:
-        y = re.search("Chrome/*.*$", row[2], re.IGNORECASE)
-        if bool(y) == True:
-            print(y)
-            chrome_index += 1
+        c = re.search("Chrome/*.*$", row[2], re.IGNORECASE)
+        f = re.search("Firefox/*.*$", row[2], re.IGNORECASE)
+        i = re.search("MSIE|Trident", row[2], re.IGNORECASE)
+        s = re.search("Safari/*.*$", row[2], re.IGNORECASE)
 
-    for row in data:
-        y = re.search("Firefox/*.*$", row[2], re.IGNORECASE)
-        if bool(y) == True:
-            firefox_index += 1
-
-    # for row in data:
-    #     y = re.search("MSIE|Trident", row[2], re.IGNORECASE)
-    #     if bool(y) == True:
-    #         ie_index += 1
-    #         print(bool(y), row[2])
-
-    # for row in data:
-    #     y = re.search("Safari/*.*$", row[2], re.IGNORECASE)
-    #     if bool(y) == True:
-    #         safari_index += 1
+        if bool(c) == True:
+            browser_dict["Chrome"] += 1
+        elif bool(f) == True:
+            browser_dict["Firefox"] += 1
+        elif bool(i) == True:
+            browser_dict["Internet Explorer"] += 1
+        elif bool(s) == True:
+            browser_dict["Safari"] += 1
 
 
-    print("Chrome: ", chrome_index)
-    print("Firefox: ", firefox_index)
-    print("Internet Explorer: ", ie_index)
-    print("Safari: ", safari_index)
+    maximum = max(browser_dict, key=browser_dict.get)
 
+    for key, value in browser_dict.items():
+        print(key, value)
+        if key == maximum:
+            hits = value
 
+    print(f"The most popular browser used today was: {maximum} ({hits})") 
 
 def main(url):
     print(f"Running main with URL = {url}...")
