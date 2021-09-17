@@ -21,9 +21,6 @@ def processData(lines):
     total_index = 0
 
 
-
-###2345u345934759347958347598374953478573894573485793485793487593847598347958437
-
     data = csv.reader(lines)
 
     for row in data:
@@ -37,11 +34,52 @@ def processData(lines):
 
     print(message)
 
+
+def browser_checker(lines):
+    
+    data = csv.reader(lines)
+
+    chrome_index = 0
+    firefox_index = 0
+    ie_index = 0
+    safari_index = 0
+
+    for row in data:
+        y = re.search("Chrome/*.*$", row[2], re.IGNORECASE)
+        if bool(y) == True:
+            print(y)
+            chrome_index += 1
+
+    for row in data:
+        y = re.search("Firefox/*.*$", row[2], re.IGNORECASE)
+        if bool(y) == True:
+            firefox_index += 1
+
+    # for row in data:
+    #     y = re.search("MSIE|Trident", row[2], re.IGNORECASE)
+    #     if bool(y) == True:
+    #         ie_index += 1
+    #         print(bool(y), row[2])
+
+    # for row in data:
+    #     y = re.search("Safari/*.*$", row[2], re.IGNORECASE)
+    #     if bool(y) == True:
+    #         safari_index += 1
+
+
+    print("Chrome: ", chrome_index)
+    print("Firefox: ", firefox_index)
+    print("Internet Explorer: ", ie_index)
+    print("Safari: ", safari_index)
+
+
+
 def main(url):
     print(f"Running main with URL = {url}...")
 
     # downloadData(url)
     processData(downloadData(url))
+    browser_checker(downloadData(url))
 
 
 if __name__ == "__main__":
