@@ -2,10 +2,11 @@
 #path to file, datetime accessed, browser, status of request, request size in bytes
 import argparse
 import csv
-import datetime
+from datetime import datetime
 import re
 import sys
 from urllib.request import urlopen
+
 
 def downloadData(url): 
     """Pulls down web log file """
@@ -19,7 +20,6 @@ def processData(lines):
 
     img_index = 0
     total_index = 0
-
 
     data = csv.reader(lines)
 
@@ -35,7 +35,7 @@ def processData(lines):
     print(message)
 
 
-def browser_checker(lines):
+def browserChecker(lines):
     
     data = csv.reader(lines)
 
@@ -71,12 +71,52 @@ def browser_checker(lines):
 
     print(f"The most popular browser used today was: {maximum} ({hits})") 
 
+
+# extra credit
+def hourGetter(lines):
+
+    print("------------------------ Extra Credit ------------------------") 
+
+    data = csv.reader(lines)
+
+    hour_dict = {
+        "one" : 0,
+        "two" : 0,
+        "three" : 0,
+        "four" : 0,
+        "five" : 0
+    }
+
+    for row in data:
+
+        try:
+            x = re.split(r'\s', row[1])
+            dt_obj = datetime.strptime(x[1], '%I:%M:%S').time()
+            if dt_obj.hour == 1:
+                hour_dict["one"] += 1
+            elif dt_obj.hour == 2:
+                hour_dict["two"] += 1
+            elif dt_obj.hour == 3:
+                hour_dict["three"] += 1
+            elif dt_obj.hour == 4:
+                hour_dict["four"] += 1
+            if dt_obj.hour == 5:
+                hour_dict["five"] += 1
+
+        except Exception as error:
+            pass
+
+    for key, value in hour_dict.items():
+        print(f'Hour {key} has {value} hits')
+
+
+
 def main(url):
     print(f"Running main with URL = {url}...")
 
-    # downloadData(url)
     processData(downloadData(url))
-    browser_checker(downloadData(url))
+    browserChecker(downloadData(url))
+    hourGetter(downloadData(url))
 
 
 if __name__ == "__main__":
