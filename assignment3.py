@@ -10,23 +10,35 @@ from urllib.request import urlopen
 def downloadData(url): 
     """Pulls down web log file """
 
-    response = urlopen(url)
+    response = urlopen(url) # don't have to write out 'url.lib.request.urlopen()' because of how I imported -- lil bit cleaner
     lines = [l.decode('utf-8') for l in response.readlines()] #decoding and putting lines from file into a list
-    data = csv.reader(lines) 
-    for row in data: 
-        print(row)
+    return lines
 
-def processData():
-    """reads from my locally stored weblog.csv"""
 
-    pass
+def processData(lines):
 
+    img_index = 0
+    total_index = 0
+
+
+    data = csv.reader(lines)
+
+    for row in data:
+        total_index += 1
+        x = re.search("PNG|JPG|GIF$", row[0], re.IGNORECASE)
+        if bool(x) == True:
+            img_index += 1
+
+    percent_of_img = int(round(img_index / total_index * 100))    
+    message = "Image requests account for {}% of all requests".format(percent_of_img)
+
+    print(message)
 
 def main(url):
     print(f"Running main with URL = {url}...")
 
-    downloadData(url)
-    # processData(downloadData(url))
+    # downloadData(url)
+    processData(downloadData(url))
 
 
 if __name__ == "__main__":

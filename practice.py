@@ -1,25 +1,48 @@
+#The url: http://s3.amazonaws.com/cuny-is211-spring2015/weblog.cs
+#path to file, datetime accessed, browser, status of request, request size in bytes
 import argparse
 import csv
+import datetime
+import re
+import sys
 from urllib.request import urlopen
-from urllib.parse import unquote
 
-def practice(url):
-##download 
-    # csvData = urlopen(url).read().decode('utf-8','ignore')
-    # # print(type(csvData)) 
-    # return csvData   
+def downloadData(url): 
+    """Pulls down web log file """
 
-    response = urlopen(url)
-    lines = [l.decode('utf-8') for l in response.readlines()]
+    response = urlopen(url) # don't have to write out 'url.lib.request.urlopen()' because of how I imported -- lil bit cleaner
+    lines = [l.decode('utf-8') for l in response.readlines()] #decoding and putting lines from file into a list
+    return lines
+
+
+def processData(lines):
+
+    img_index = 0
+    total_index = 0
+
+
     data = csv.reader(lines)
+
     for row in data:
-        print(row)
+        total_index += 1
+        x = re.search("PNG|JPG|GIF$", row[0], re.IGNORECASE)
+        if bool(x) == True:
+            img_index += 1
 
-# def processData(str):
+    percent_of_img = round(img_index / total_index, 2)    
+    message = "Image requests account for {}% of all requests".format(percent_of_img)
 
-#     reader = csv.reader(str, delimiter=',')
-#     for row in reader:
-#         print(row)
+    print(message)
+
+
+
+
+
+def main(url):
+    print(f"Running main with URL = {url}...")
+
+    #downloadData(url)
+    processData(downloadData(url))
 
 
 if __name__ == "__main__":
@@ -27,6 +50,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", help="URL to the datafile", type=str, required=True)
     args = parser.parse_args()
-    practice(args.url)
-    # processData(practice(args.url))
-
+    main(args.url)
+    
