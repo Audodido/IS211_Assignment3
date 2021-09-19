@@ -1,5 +1,4 @@
 #The url: http://s3.amazonaws.com/cuny-is211-spring2015/weblog.cs
-#path to file, datetime accessed, browser, status of request, request size in bytes
 import argparse
 import csv
 from datetime import datetime
@@ -11,17 +10,17 @@ from urllib.request import urlopen
 def downloadData(url): 
     """Pulls down web log file """
 
-    response = urlopen(url) # don't have to write out 'url.lib.request.urlopen()' because of how I imported -- lil bit cleaner
+    response = urlopen(url) 
     lines = [l.decode('utf-8') for l in response.readlines()] #decoding and putting lines from file into a list
     return lines
 
 
 def processData(lines):
 
-    img_index = 0
+    img_index = 0 
     total_index = 0
 
-    data = csv.reader(lines)
+    data = csv.reader(lines) #feeding output from downloadData() into a reader object
 
     for row in data:
         total_index += 1
@@ -108,7 +107,6 @@ def hourGetter(lines):
 
     for key, value in hour_dict.items():
         print(f'Hour {key} has {value} hits')
-
 
 
 def main(url):
